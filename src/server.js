@@ -3,7 +3,6 @@ const favicon = require('serve-favicon');
 const path = require('path');
 const utils = require('./utils');
 
-const brokenSyntax = ;
 // fn to create express server
 const create = async () => {
 

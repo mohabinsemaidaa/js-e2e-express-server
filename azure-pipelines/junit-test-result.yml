@@ -13,6 +13,20 @@ pool:
   vmImage: ubuntu-latest
 
 steps:
+- task: ArchiveFiles@2
+  displayName: 'Archive application files'
+  inputs:
+    rootFolderOrFile: '$(Build.SourcesDirectory)'
+    includeRootFolder: false
+    archiveType: 'zip'
+    archiveFile: '$(Build.ArtifactStagingDirectory)/application.zip'
+    replaceExistingArchive: true
+- task: PublishPipelineArtifact@1
+  displayName: 'Publish application artifact'
+  inputs:
+    targetPath: '$(Build.ArtifactStagingDirectory)/application.zip'
+    artifact: 'application'
+    publishLocation: 'pipeline'
 - task: NodeTool@0
   inputs:
     versionSpec: '10.x'

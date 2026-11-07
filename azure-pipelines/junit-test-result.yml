@@ -4,7 +4,10 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
 trigger:
-- main
+  branches:
+    include:
+    - main
+    - feature/*
 
 pool:
   vmImage: ubuntu-latest
@@ -14,7 +17,8 @@ steps:
   inputs:
     versionSpec: '10.x'
   displayName: 'Install Node.js'
-
+- script: node --check server.js
+  displayName: 'Check JavaScript syntax'
 - script: |
     npm install
     npm run build

@@ -3,42 +3,41 @@
 # Add steps that analyze code, save build artifacts, deploy, and more:
 # https://docs.microsoft.com/azure/devops/pipelines/languages/javascript
 
+
 trigger:
   branches:
     include:
-    - main
-    - feature/*
+      - main
+      - feature/*
 
 pool:
   vmImage: ubuntu-latest
 
 steps:
-- task: ArchiveFiles@2
-  displayName: 'Archive application files'
-  inputs:
-    rootFolderOrFile: '$(Build.SourcesDirectory)'
-    includeRootFolder: false
-    archiveType: 'zip'
-    archiveFile: '$(Build.ArtifactStagingDirectory)/application.zip'
-    replaceExistingArchive: true
-- task: PublishPipelineArtifact@1
-  displayName: 'Publish application artifact'
-  inputs:
-    targetPath: '$(Build.ArtifactStagingDirectory)/application.zip'
-    artifact: 'application'
-    publishLocation: 'pipeline'
-- task: NodeTool@0
-  inputs:
-    versionSpec: '10.x'
-  displayName: 'Install Node.js'
-- script: node --check server.js
-  displayName: 'Check JavaScript syntax'
-- script: |
-    npm install
-    npm run build
-    npm test
-- task: PublishTestResults@2
-  inputs:
-    testResultsFormat: 'JUnit'
-    testResultsFiles: '**/TEST-*.xml'
-  displayName: 'npm install and build'
+  - task: UseNode@1
+    displayName: 'Install Node.js'
+    inputs:
+      version: '20.x'
+  - script: npm install
+    displayName: 'Install dependencies'
+  - script: node --check src/server.js
+    displayName: 'Check JavaScript syntax'
+  - script: |
+      npm run build
+      npm test
+    displayName: 'Build and test application'
+  - task: ArchiveFiles@2
+    displayName: 'Archive application files'
+    inputs:
+      rootFolderOrFile: '$(Build.SourcesDirectory)'
+      includeRootFolder: false
+      archiveType: 'zip'
+      archiveFile: '$(Build.ArtifactStagingDirectory)/application.zip'
+      replaceExistingArchive: true
+  - task: PublishPipelineArtifact@1
+    displayName: 'Publish application artifact'
+    inputs:
+      targetPath: '$(Build.ArtifactStagingDirectory)/application.zip'
+      artifact: 'application'
+      publishLocation: 'pipeline'
+

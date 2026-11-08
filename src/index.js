@@ -1,7 +1,16 @@
+const appInsights = require('applicationinsights');
+
+if (process.env.APPLICATIONINSIGHTS_CONNECTION_STRING) {
+    appInsights.setup()
+        .setAutoCollectRequests(true)
+        .setAutoCollectExceptions(true)
+        .setAutoCollectDependencies(true)
+        .setSendLiveMetrics(true)
+        .start();
+}
+
 const server = require('./server');
 
-// App Service on Windows: PORT
-// App Service on Linux: WEB_PORT
 const port = process.env.PORT || 3000;
 const hostname = '0.0.0.0';
 

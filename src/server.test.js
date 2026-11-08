@@ -12,7 +12,7 @@ describe('root', () => {
       .get('/')
       .expect(200)
       .then((res) => {
-        expect(res.text).toContain('Welcome to Express');
+        expect(res.text).toContain('Welcome to the Azure DevOps Course Application');
       }));
 
   it('request api, returns json', () => request(app)
